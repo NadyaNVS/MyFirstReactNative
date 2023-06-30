@@ -1,40 +1,23 @@
 import {StatusBar} from 'expo-status-bar';
-import {Text, View, Image} from 'react-native';
-import styled from 'styled-components/native'
+import {Text, View, Alert, Image} from 'react-native';
+import {Post} from './components/Post';
+import axios from 'axios';
+import React, {useState} from 'react';
 
-const Post = styled.View`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  padding: 15px;
-  border-bottom-width: 1px;
-  border-bottom-color: rgba(0, 0, 0, 0.1);
-  border-bottom-style: solid;
-  `;
-
-const PostImage = styled.Image`
-  width: 100px;
-  height: 100px;
-  margin-rigth: 12px;
-`;
-
-const PostTitle = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-`
-
-const PostDate = styled.Text`
-  font-size: 10px;
-`
-
-const PostDetails = styled.View`
-  display: flex;
-  flex-direction: colomn;
-  justify-content: space-between;
-`
 
 export default function App() {
+  const [posts, setPosts] = useState();
+  React.useEffect(() => {
+    axios
+      .get('https://649f3ff4245f077f3e9d7536.mockapi.io/post')
+      .then(({data}) => {
+        setPosts(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert('error', 'Connot receive date')
+      })
+  }, []);
   return (
     <View style={{
       flex: 1,
@@ -43,17 +26,13 @@ export default function App() {
       alignItems: 'center',
     }}>
       <StatusBar style="auto" />
-      <Post>
-        <PostImage
-          source={{
-            uri: 'https://reactnative.dev/docs/assets/p_cat2.png',
-          }}
-        />
-        <PostDetails>
-          <PostTitle>Hi</PostTitle>
-          <PostDate>30/06/2023</PostDate>
-        </PostDetails>
-      </Post>
+      {posts.map((post, idx) => (
+        <Post
+          key={idx}
+          title={post.title}
+          imageUrl={post.imageUrl}
+          createdAt={post.createdAt} />
+      ))}
     </View>
   );
 }
