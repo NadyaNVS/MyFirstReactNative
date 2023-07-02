@@ -14,6 +14,7 @@ const PostView = styled.View`
 const PostImage = styled.Image`
   width: 100px;
   height: 100px;
+  border-radius: 12px;
   margin-right: 12px;
 `;
 
@@ -29,9 +30,15 @@ const PostDate = styled.Text`
 const PostDetails = styled.View`
   display: flex;
   flex: 1;
-  flex-direction: colomn;
   justify-content: space-between;
 `;
+
+const truncateTitle = (str) => {
+  if (str.length >= 50) {
+    return str.substring(0, 50) + '...';
+  }
+  return str;
+};
 
 export const Post = ({ title, imageUrl, createdAt }) => {
   return (
@@ -42,9 +49,26 @@ export const Post = ({ title, imageUrl, createdAt }) => {
         }}
       />
       <PostDetails>
-        <PostTitle>{title}</PostTitle>
-        <PostDate>{createdAt}</PostDate>
+        <PostTitle>{truncateTitle(title)}</PostTitle>
+        <PostDate>{new Date(createdAt).toLocaleDateString()}</PostDate>
       </PostDetails>
     </PostView>
   );
 };
+
+// export const Post = ({ title, imageUrl, createdAt }) => {
+//   return (
+//     <View>
+//       <Image
+//         source={{
+//           uri: imageUrl,
+//         }}
+//         style={{ width: 200, height: 200 }}
+//       />
+//       <View>
+//         <Text>{title}</Text>
+//         <Text>{createdAt}</Text>
+//       </View>
+//     </View>
+//   );
+// };
